@@ -8,7 +8,7 @@ class Ui extends Base
     nc.showCursor = false
     @win.on    'inputChar', @onInputChar
     process.on 'SIGWINCH',  @onSIGWINCH
-    process.on 'SIGINT',  @onSIGINT
+    process.on 'SIGINT',    @onSIGINT
     do @draw
 
   initLogProxy: =>
@@ -24,9 +24,12 @@ class Ui extends Base
     do @win.erase
     @win.insstr 0, 0, 'Press Q to quit'
     if @options.verbose or @options.debug
-      for i in [0..nc.lines - 2]
-        break unless @logBuffer[i]?
-        @win.insstr i + 2, 0, @logBuffer[i].join ' '
+      limit = Math.min(nc.lines - 3, @logBuffer.length)
+      base = Math.max(0, @logBuffer.length - limit - 1)
+      for i in [0...limit]
+        message = @logBuffer[base + i].join ' '
+        #message = "#{nc.lines} #{base} #{@logBuffer.length} #{limit} #{i} #{message}"
+        @win.insstr i + 2, 0, message
     do @win.refresh
 
   close: =>
