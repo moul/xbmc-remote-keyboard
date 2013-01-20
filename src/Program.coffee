@@ -14,7 +14,9 @@ class Program extends Base
     program
       .version(do Program.getVersion)
       .usage('[options] hostname/ip[:port]')
-      .option('-v, --verbose', 'verbose')
+      .option('-v, --verbose',       'verbose')
+      .option('-s, --silent',        'do not send message on connection')
+      .option('-a, --agent <agent>', 'user agent')
 
   parseOptions: =>
     program.parse process.argv
@@ -33,7 +35,8 @@ class Program extends Base
     @xbmcApi = new XbmcApi
       connection: @xbmcConnection
       verbose:    @options.verbose
-      agent:      'Remote Keyboard'
+      agent:      @options.agent || 'Remote Keyboard'
+      silent:     @options.silent
     @xbmcApi.on 'connection:open', ->
       fn false if fn
     @xbmcApi.on 'connection:error', ->
