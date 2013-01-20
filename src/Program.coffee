@@ -1,7 +1,9 @@
 fs      = require 'fs'
 program = require 'commander'
+{Ui}    = require './Ui'
+{Base}  = require './Base'
 
-class Program
+class Program extends Base
   constructor: (@options = {}) ->
     @options.name ?= 'xbmc-remote-keyboard'
     do @initCommander
@@ -20,7 +22,7 @@ class Program
     [@options.host, @options.port] = @options.args[0].split ':'
     @options.host ?= '127.0.0.1'
     @options.port = parseInt(@options.port) || 9090
-    console.log @options.args
+    @log @options.args
 
   initXbmc: (fn = null) =>
     {TCPConnection, XbmcApi} = require 'xbmc'
@@ -37,15 +39,21 @@ class Program
     @xbmcApi.on 'connection:error', ->
       fn true if fn
 
-  initNcurses: (fn = null) =>
-    
+  initUi: (fn = null) =>
+    @ui = new Ui @options
+    do @ui.start
     do @xbmcApi.input.right
     fn false if fn
+
+  setupHandlers: =>
+    @ui.on 'input', (input) =>
+      @log 'input received!!', input
 
   run: =>
     do @parseOptions
     @initXbmc (err) =>
-      do @initNcurses
+      @initUi (err) =>
+        do @setupHandlers
 
   @getVersion: -> JSON.parse(fs.readFileSync "#{__dirname}/../package.json", 'utf8').version
 
