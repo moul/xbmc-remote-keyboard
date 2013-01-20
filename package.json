@@ -1,19 +1,27 @@
 {
   "name": "xbmc-remote-keyboard",
-  "version": "0.0.1",
+  "version": "0.1.1",
   "description": "Send local keyboard presses to a remote XBMC through JSON RPC api",
   "main": "index.js",
+  "bin": {
+    "xbmc-remote-keyboard": "./bin/xbmc-remote-keyboard"
+  },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "dependencies": {
-    "xbmc": "0.0.6",
-    "ncurses": "0.3"
+    "xbmc":      "0.0.6",
+    "commander": "1.1.1",
+    "ncurses":   "0.3"
   },
   "repository": "git@github.com:moul/xbmc-remote-keyboard.git",
   "keywords": [
     "xbmc",
-    "remote"
+    "remote",
+    "ncurses",
+    "termcaps",
+    "curses",
+    "terminal"
   ],
   "author": "Manfred Touron <m@42.am>",
   "license": "MIT"
