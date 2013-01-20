@@ -39,10 +39,12 @@ class Program extends Base
       verbose:    @options.debug
       agent:      @options.agent || 'Remote Keyboard'
       silent:     @options.silent
+
     @xbmcApi.on 'connection:open', ->
       fn false if fn
-    @xbmcApi.on 'connection:error', ->
-      fn true if fn
+
+    @xbmcApi.on 'connection:error', (e) ->
+      fn true, e  if fn
 
   initKeyboard: (fn = null) =>
     @keyboard = new Keyboard @options
@@ -67,16 +69,19 @@ class Program extends Base
     @keyboard.on 'unknownInput', (c, i) =>
       @log "Unknown input", c, i
 
-  close: =>
-    @log "closing"
-    do @ui.close
+  close: (reason = '') =>
+    @log if reason then "closing (#{reason})" else "closing"
+    do @ui.close if @ui
     process.exit 0
 
   run: =>
     do @parseOptions
-    @initXbmc (err) =>
-      @initUi (err) =>
-        @initKeyboard (err) =>
+    @initXbmc (err, reason = null) =>
+      return @close reason if err
+      @initUi (err, reason = null) =>
+        return @close reason if err
+        @initKeyboard (err, reason = null) =>
+          return @close reason if err
           do @setupHandlers
 
   @getVersion: -> JSON.parse(fs.readFileSync "#{__dirname}/../package.json", 'utf8').version
