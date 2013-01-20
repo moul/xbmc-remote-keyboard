@@ -49,17 +49,23 @@ class Program extends Base
     fn false if fn
 
   setupHandlers: =>
-    @ui.on 'input', @onInput
+    @ui.on 'input',   @onInput
+    #@ui.on 'rawIput', @onInput
 
   close: =>
     @log "closing"
     do @ui.close
     process.exit 0
 
+  charMap: {}
+
   onInput: (c) =>
     if c is 'q'
       return do @close
-    @log 'input received!!', c
+    if @charMap[c]?
+      @log 'input received!!', c
+    else
+      @log 'unhandled input', c
 
   run: =>
     do @parseOptions

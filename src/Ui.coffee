@@ -34,8 +34,15 @@ class Ui extends Base
     do @win.erase
     do nc.cleanup
 
-  onInputChar: (c) =>
-    @emit 'input', c
+  human: (c, i) =>
+    for key, val of nc.keys
+      if val is i
+        return key
+    return c
+
+  onInputChar: (c, i) =>
+    @emit 'rawInput', c, i
+    @emit 'input',    @human c, i
 
   onSigWinch: =>
     @log 'onSigWinch'
