@@ -57,8 +57,8 @@ class Program extends Base
     fn false if fn
 
   setupHandlers: =>
-    @ui.on 'input', (c, i) =>
-      @keyboard.emit 'input', c, i
+    @ui.on 'input', (human, c, i) =>
+      @keyboard.emit 'input', human, c, i
 
     @ui.on 'quit', =>
       do @close
@@ -71,6 +71,16 @@ class Program extends Base
 
     @keyboard.on 'unknownInput', (c, i) =>
       @log "Unknown input", c, i
+
+    @keyboard.on 'sendText', (text) =>
+      @xbmcApi.input.SendText text
+
+    @xbmcApi.on 'api:Input.OnInputRequested', =>
+      @keyboard.emit 'setInputMode', 'text'
+
+    @xbmcApi.on 'api:Input.OnInputFinished', =>
+      @keyboard.emit 'setInputMode', 'action'
+
 
   close: (reason = '') =>
     @log if reason then "closing (#{reason})" else "closing"

@@ -25,7 +25,7 @@ class Ui extends Base
     @win.insstr 0, 0, 'Press Q to quit'
     if @options.verbose or @options.debug
       limit = Math.min(nc.lines - 3, @logBuffer.length)
-      base = Math.max(0, @logBuffer.length - limit - 1)
+      base = Math.max(0, @logBuffer.length - limit)
       for i in [0...limit]
         message = @logBuffer[base + i].join ' '
         #message = "#{nc.lines} #{base} #{@logBuffer.length} #{limit} #{i} #{message}"
