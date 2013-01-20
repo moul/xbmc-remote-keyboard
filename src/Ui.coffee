@@ -4,11 +4,11 @@ nc     = require 'ncurses'
 class Ui extends Base
   start: =>
     @win = new nc.Window()
-    if @options.verbose or @options.debug
-      do @initLogProxy
-    nc.showCursor = true
+    do @initLogProxy if @options.verbose or @options.debug
+    nc.showCursor = false
     @win.on    'inputChar', @onInputChar
-    process.on 'SIGWINCH',  @onSigWinch
+    process.on 'SIGWINCH',  @onSIGWINCH
+    process.on 'SIGINT',  @onSIGINT
     do @draw
 
   initLogProxy: =>
@@ -25,8 +25,7 @@ class Ui extends Base
     @win.insstr 0, 0, 'Press Q to quit'
     if @options.verbose or @options.debug
       for i in [0..nc.lines - 2]
-        unless @logBuffer[i]?
-          break
+        break unless @logBuffer[i]?
         @win.insstr i + 2, 0, @logBuffer[i].join ' '
     do @win.refresh
 
@@ -36,16 +35,15 @@ class Ui extends Base
 
   human: (c, i) =>
     for key, val of nc.keys
-      if val is i
-        return key
+      return key if val is i
     return c
 
   onInputChar: (c, i) =>
     @emit 'rawInput', c, i
-    @emit 'input',    @human(c, i), i
+    @emit 'input',    @human(c, i), c, i
 
-  onSigWinch: =>
-    @log 'onSigWinch'
+  onSIGWINCH: => do @draw
+  onSIGINT:   => @emit 'quit'
 
 module.exports =
   Ui: Ui

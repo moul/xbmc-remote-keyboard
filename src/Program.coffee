@@ -60,6 +60,9 @@ class Program extends Base
     @ui.on 'input', (c, i) =>
       @keyboard.emit 'input', c, i
 
+    @ui.on 'quit', =>
+      do @close
+
     @keyboard.on 'quit', =>
       do @close
 
