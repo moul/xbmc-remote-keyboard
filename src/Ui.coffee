@@ -17,17 +17,18 @@ class Ui extends Base
     console.log = @log
 
   log: (args...) =>
+    return unless @options.verbose
     @logBuffer.push [args...]
     do @draw
 
   draw: =>
     do @win.erase
     @win.insstr 0, 0, 'Welcome'
-    for i in [0..nc.lines - 2]
-      unless @logBuffer[i]?
-        break
-      @win.insstr i + 2, 0, @logBuffer[i].join ' '
-    #@oldLog nc.lines
+    if @options.verbose
+      for i in [0..nc.lines - 2]
+        unless @logBuffer[i]?
+          break
+        @win.insstr i + 2, 0, @logBuffer[i].join ' '
     do @win.refresh
 
   close: =>
@@ -42,7 +43,7 @@ class Ui extends Base
 
   onInputChar: (c, i) =>
     @emit 'rawInput', c, i
-    @emit 'input',    @human c, i
+    @emit 'input',    @human(c, i), i
 
   onSigWinch: =>
     @log 'onSigWinch'

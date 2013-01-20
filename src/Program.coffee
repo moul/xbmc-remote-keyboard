@@ -1,7 +1,8 @@
-fs      = require 'fs'
-program = require 'commander'
-{Ui}    = require './Ui'
-{Base}  = require './Base'
+fs         = require 'fs'
+program    = require 'commander'
+{Ui}       = require './Ui'
+{Base}     = require './Base'
+{Keyboard} = require './Keyboard'
 
 class Program extends Base
   constructor: (@options = {}) ->
@@ -15,6 +16,7 @@ class Program extends Base
       .version(do Program.getVersion)
       .usage('[options] hostname/ip[:port]')
       .option('-v, --verbose',       'verbose')
+      .option('-d, --debug',         'debug')
       .option('-s, --silent',        'do not send message on connection')
       .option('-a, --agent <agent>', 'user agent')
 
@@ -31,10 +33,10 @@ class Program extends Base
     @xbmcConnection = new TCPConnection
       host:       @options.host
       port:       @options.port
-      verbose:    @options.verbose
+      verbose:    @options.debug
     @xbmcApi = new XbmcApi
       connection: @xbmcConnection
-      verbose:    @options.verbose
+      verbose:    @options.debug
       agent:      @options.agent || 'Remote Keyboard'
       silent:     @options.silent
     @xbmcApi.on 'connection:open', ->
@@ -42,36 +44,40 @@ class Program extends Base
     @xbmcApi.on 'connection:error', ->
       fn true if fn
 
+  initKeyboard: (fn = null) =>
+    @keyboard = new Keyboard @options
+    do @keyboard.start
+    fn false if fn
+
   initUi: (fn = null) =>
     @ui = new Ui @options
     do @ui.start
-    do @xbmcApi.input.right
     fn false if fn
 
   setupHandlers: =>
-    @ui.on 'input',   @onInput
-    #@ui.on 'rawIput', @onInput
+    @ui.on 'input', (c, i) =>
+      @keyboard.emit 'input', c, i
+
+    @keyboard.on 'quit', =>
+      do @close
+
+    @keyboard.on 'apiSendInput', (method, args = null) =>
+      @xbmcApi.input[method] args
+
+    @keyboard.on 'unknownInput', (c, i) =>
+      @log "Unknown input", c, i
 
   close: =>
     @log "closing"
     do @ui.close
     process.exit 0
 
-  charMap: {}
-
-  onInput: (c) =>
-    if c is 'q'
-      return do @close
-    if @charMap[c]?
-      @log 'input received!!', c
-    else
-      @log 'unhandled input', c
-
   run: =>
     do @parseOptions
     @initXbmc (err) =>
       @initUi (err) =>
-        do @setupHandlers
+        @initKeyboard (err) =>
+          do @setupHandlers
 
   @getVersion: -> JSON.parse(fs.readFileSync "#{__dirname}/../package.json", 'utf8').version
 
