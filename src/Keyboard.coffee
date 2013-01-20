@@ -27,6 +27,7 @@ class Keyboard extends Base
   onInput: (c, i) =>
     for key in [c, i]
       if @apiSendMap[key]?
+        @log   "sending Input.#{@apiSendMap[key]} (#{key})"
         return @emit 'apiSendInput', @apiSendMap[key]
       if @["on_#{key}"]?
         return do @["on_#{key}"]

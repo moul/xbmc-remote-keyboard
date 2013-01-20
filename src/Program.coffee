@@ -23,10 +23,10 @@ class Program extends Base
   parseOptions: =>
     program.parse process.argv
     @options extends program
+    do program.help unless @options.args[0]?
     [@options.host, @options.port] = @options.args[0].split ':'
     @options.host ?= '127.0.0.1'
     @options.port = parseInt(@options.port) || 9090
-    @log @options.args
 
   initXbmc: (fn = null) =>
     {TCPConnection, XbmcApi} = require 'xbmc'

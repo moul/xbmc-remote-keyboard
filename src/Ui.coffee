@@ -23,7 +23,7 @@ class Ui extends Base
 
   draw: =>
     do @win.erase
-    @win.insstr 0, 0, 'Welcome'
+    @win.insstr 0, 0, 'Press Q to quit'
     if @options.verbose
       for i in [0..nc.lines - 2]
         unless @logBuffer[i]?
