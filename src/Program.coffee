@@ -12,16 +12,18 @@ class Program extends Base
     return @
 
   initCommander: =>
+    default_config = process.env[if process.platform == 'win32' then 'USERPROFILE' else 'HOME'] + '/.xbmc-remote-keyboard.json'
     program.name = @options.name
     program
       .version(do Program.getVersion)
       .usage('[options] hostname/ip[:port]')
       .option('-v, --verbose',             'verbose')
       .option('-d, --debug',               'debug')
-      .option('-c, --config <file>',       'config file',        process.env[if process.platform == 'win32' then 'USERPROFILE' else 'HOME'] + '/.xbmc-remote-keyboard.json')
+      .option('-c, --config <file>',       'config file',        default_config)
       .option('-u, --username <username>', 'username')
       .option('-P, --password <password>', 'password')
       .option('-s, --host <host>',         'hostname/ip')
+      .option('-w, --save',                'save config file')
       .option('-p, --port <port>',         'port',               9090)
       .option('-S, --silent',              'do not send message')
       .option('-a, --agent <agent>',       'user agent',         'Remote Keyboard')
@@ -41,7 +43,17 @@ class Program extends Base
       @options['port'] = parseInt(target['port']) if target['port']?
       @options['host'] = target['hostname'] if target['hostname']
       [@options.username, @options.password] = target['auth'].split(':') if target['auth']?
+    if @options.save
+      do @saveOptions
+      process.exit 0
     do program.help unless @options.host?
+
+  saveOptions: =>
+    process.stdout.write "Writing config file (#{@options.config})... "
+    config = {}
+    config[key] = @options[key] for key in ['host', 'port']
+    fs.writeFileSync @options.config, JSON.stringify(config)
+    console.log "Done."
 
   initXbmc: (fn = null) =>
     {TCPConnection, XbmcApi} = require 'xbmc'
