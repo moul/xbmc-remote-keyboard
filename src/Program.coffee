@@ -96,9 +96,9 @@ class Program extends Base
       @keyboard.emit 'setInputMode', 'action'
 
   close: (reason = '') =>
-    @log if reason then "closing (#{reason})" else "closing"
+    console.log if reason then "Exiting (#{reason})" else "closing"
     do @ui.close if @ui
-    process.exit 0
+    process.exit 1
 
   run: =>
     do @parseOptions
