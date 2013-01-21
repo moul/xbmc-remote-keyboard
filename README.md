@@ -1,6 +1,8 @@
 xbmc-remote-keyboard
 ====================
 
+<img width="600px" src="https://raw.github.com/moul/xbmc-remote-keyboard/screenshots/images/verbose.png" /> 
+
 Send local keyboard presses to a remote XBMC through JSON RPC api
 
 This program needs a terminal with ncurses support (works on linux and Mac OS X)
@@ -64,3 +66,14 @@ Install
 ```bash
 [sudo] npm install -g xbmc-remote-keyboard
 ```
+
+Debug
+-----
+
+By passing `-d` option, you can see the JSON-RPC api calls
+
+```bash
+$ xbmc-remote-keyboard -d 127.0.0.1
+```
+
+<img width="600px" src="https://raw.github.com/moul/xbmc-remote-keyboard/screenshots/images/debug.png" />
