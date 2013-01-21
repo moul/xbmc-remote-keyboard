@@ -3,6 +3,10 @@ xbmc-remote-keyboard
 
 Send local keyboard presses to a remote XBMC through JSON RPC api
 
+This program needs a terminal with ncurses support (works on linux and Mac OS X)
+
+It is like the Android and IOS remote controler apps but in a shell with a real keyboard
+
 Usage
 -----
 
