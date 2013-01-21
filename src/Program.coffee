@@ -69,6 +69,9 @@ class Program extends Base
     @keyboard.on 'apiSendInput', (method, args = null) =>
       @xbmcApi.input[method] args
 
+    @keyboard.on 'api.Input.ExecuteAction', (method, args = null) =>
+      @xbmcApi.input.ExecuteAction method, args
+
     @keyboard.on 'unknownInput', (c, i) =>
       @log "Unknown input", c, i
 
@@ -80,7 +83,6 @@ class Program extends Base
 
     @xbmcApi.on 'api:Input.OnInputFinished', =>
       @keyboard.emit 'setInputMode', 'action'
-
 
   close: (reason = '') =>
     @log if reason then "closing (#{reason})" else "closing"

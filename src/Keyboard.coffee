@@ -22,10 +22,9 @@ class Keyboard extends Base
     'c':                'Contextmenu'
     'i':                'Info'
 
+  apiExecuteActionMap:
+    'p':                'play'
   #Input.SendText string, done
-
-  # apiExecuteActionMap:
-  #Input.ExecuteAction action
 
   onInput: (human, c, i) =>
     fn = @["onInput_#{@mode}"]
@@ -53,6 +52,9 @@ class Keyboard extends Base
       if @apiSendMap[key]?
         @log   "sending Input.#{@apiSendMap[key]} (#{key})"
         return @emit 'apiSendInput', @apiSendMap[key]
+      if @apiExecuteActionMap[key]?
+        @log   "sending Input.ExecuteAction(#{@apiExecuteActionMap[key]}) (#{key})"
+        return @emit 'api.Input.ExecuteAction', @apiExecuteActionMap[key]
       if @["on_#{key}"]?
         return do @["on_#{key}"]
     @emit 'unknownInput', human, c, i
