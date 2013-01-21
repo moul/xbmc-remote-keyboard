@@ -24,6 +24,7 @@ class Keyboard extends Base
 
   apiExecuteActionMap:
     'p':                'play'
+    'f':                'fullscreen'
   #Input.SendText string, done
 
   onInput: (human, c, i) =>

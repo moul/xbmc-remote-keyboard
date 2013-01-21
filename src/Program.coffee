@@ -3,6 +3,7 @@ program    = require 'commander'
 {Ui}       = require './Ui'
 {Base}     = require './Base'
 {Keyboard} = require './Keyboard'
+url        = require 'url'
 
 class Program extends Base
   constructor: (@options = {}) ->
@@ -15,18 +16,26 @@ class Program extends Base
     program
       .version(do Program.getVersion)
       .usage('[options] hostname/ip[:port]')
-      .option('-v, --verbose',       'verbose')
-      .option('-d, --debug',         'debug')
-      .option('-s, --silent',        'do not send message on connection')
-      .option('-a, --agent <agent>', 'user agent')
+      .option('-v, --verbose',             'verbose')
+      .option('-d, --debug',               'debug')
+      .option('-u, --username <username>', 'username')
+      .option('-P, --password <password>', 'password')
+      .option('-s, --host <host>',         'hostname/ip')
+      .option('-p, --port <port>',         'port',                              9090)
+      .option('-s, --silent',              'do not send message on connection')
+      .option('-a, --agent <agent>',       'user agent',                        'Remote Keyboard')
 
   parseOptions: =>
     program.parse process.argv
     @options extends program
-    do program.help unless @options.args[0]?
-    [@options.host, @options.port] = @options.args[0].split ':'
-    @options.host ?= '127.0.0.1'
-    @options.port = parseInt(@options.port) || 9090
+    if @options.args[0]?
+      arg = @options.args[0]
+      arg = "http://#{arg}" unless arg.indexOf('://') is 0
+      target = url.parse arg
+      @options['port'] = parseInt(target['port']) if target['port']?
+      @options['host'] = target['hostname'] if target['hostname']
+      [@options.username, @options.password] = target['auth'].split(':') if target['auth']?
+    do program.help unless @options.host?
 
   initXbmc: (fn = null) =>
     {TCPConnection, XbmcApi} = require 'xbmc'
@@ -37,6 +46,8 @@ class Program extends Base
     @xbmcApi = new XbmcApi
       connection: @xbmcConnection
       verbose:    @options.debug
+      username:   @options.username
+      password:   @options.password
       agent:      @options.agent || 'Remote Keyboard'
       silent:     @options.silent
 
