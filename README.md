@@ -52,7 +52,7 @@ You can also save your settings for later
 $ xbmc-remote-keyboard --save 127.0.0.1:9090
 ```
 
-Then, you don't need any arguments
+Then, you do not need arguments anymore
 
 ```bash
 $ xbmc-remote-keyboard
