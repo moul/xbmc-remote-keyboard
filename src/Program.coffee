@@ -7,7 +7,7 @@ url        = require 'url'
 
 class Program extends Base
   constructor: (@options = {}) ->
-    @options.name ?= 'xbmc-remote-keyboard'
+    @options.name   ?= 'xbmc-remote-keyboard'
     do @initCommander
     return @
 
@@ -18,12 +18,13 @@ class Program extends Base
       .usage('[options] hostname/ip[:port]')
       .option('-v, --verbose',             'verbose')
       .option('-d, --debug',               'debug')
+      .option('-c, --config <file>',       'config file',        process.env[if process.platform == 'win32' then 'USERPROFILE' else 'HOME'] + '/.xbmc-remote-keyboard.conf')
       .option('-u, --username <username>', 'username')
       .option('-P, --password <password>', 'password')
       .option('-s, --host <host>',         'hostname/ip')
-      .option('-p, --port <port>',         'port',                              9090)
-      .option('-s, --silent',              'do not send message on connection')
-      .option('-a, --agent <agent>',       'user agent',                        'Remote Keyboard')
+      .option('-p, --port <port>',         'port',               9090)
+      .option('-S, --silent',              'do not send message')
+      .option('-a, --agent <agent>',       'user agent',         'Remote Keyboard')
 
   parseOptions: =>
     program.parse process.argv
