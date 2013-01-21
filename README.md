@@ -9,18 +9,22 @@ Usage
 Usage
 
 ```bash
-$ xbmc-remote-keyboard 
+$ xbmc-remote-keyboard
 
   Usage: xbmc-remote-keyboard [options] hostname/ip[:port]
 
   Options:
 
-    -h, --help           output usage information
-    -V, --version        output the version number
-    -v, --verbose        verbose
-    -d, --debug          debug
-    -s, --silent         do not send message on connection
-    -a, --agent <agent>  user agent
+    -h, --help                 output usage information
+    -V, --version              output the version number
+    -v, --verbose              verbose
+    -d, --debug                debug
+    -u, --username <username>  username
+    -P, --password <password>  password
+    -s, --host <host>          hostname/ip
+    -p, --port <port>          port
+    -s, --silent               do not send message on connection
+    -a, --agent <agent>        user agent
 ```
 
 Connecting to localhost
@@ -39,5 +43,5 @@ Install
 -------
 
 ```bash
-[sudo npm install -g xbmc-remote-keyboard
+[sudo] npm install -g xbmc-remote-keyboard
 ```
