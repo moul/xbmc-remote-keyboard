@@ -18,7 +18,7 @@ class Program extends Base
       .usage('[options] hostname/ip[:port]')
       .option('-v, --verbose',             'verbose')
       .option('-d, --debug',               'debug')
-      .option('-c, --config <file>',       'config file',        process.env[if process.platform == 'win32' then 'USERPROFILE' else 'HOME'] + '/.xbmc-remote-keyboard.conf')
+      .option('-c, --config <file>',       'config file',        process.env[if process.platform == 'win32' then 'USERPROFILE' else 'HOME'] + '/.xbmc-remote-keyboard.json')
       .option('-u, --username <username>', 'username')
       .option('-P, --password <password>', 'password')
       .option('-s, --host <host>',         'hostname/ip')
@@ -29,6 +29,11 @@ class Program extends Base
   parseOptions: =>
     program.parse process.argv
     @options extends program
+    try
+      config = require @options.config
+      @options extends config
+    catch e
+      @log e
     if @options.args[0]?
       arg = @options.args[0]
       arg = "http://#{arg}" unless arg.indexOf('://') is 0
