@@ -13,7 +13,7 @@ Usage
 Usage
 
 ```bash
-$ xbmc-remote-keyboard
+$ xbmc-remote-keyboard -h
 
   Usage: xbmc-remote-keyboard [options] hostname/ip[:port]
 
@@ -23,12 +23,15 @@ $ xbmc-remote-keyboard
     -V, --version              output the version number
     -v, --verbose              verbose
     -d, --debug                debug
+    -c, --config <file>        config file
     -u, --username <username>  username
     -P, --password <password>  password
     -s, --host <host>          hostname/ip
+    -w, --save                 save config file
     -p, --port <port>          port
-    -s, --silent               do not send message on connection
+    -S, --silent               do not send message
     -a, --agent <agent>        user agent
+
 ```
 
 Connecting to localhost
@@ -41,6 +44,18 @@ Connect to localhost and port 9090
 
 ```bash
 $ xbmc-remote-keyboard 127.0.0.1:9090
+```
+
+You can also save your settings for later
+
+```bash
+$ xbmc-remote-keyboard --save 127.0.0.1:9090
+```
+
+Then, you don't need any arguments
+
+```bash
+$ xbmc-remote-keyboard
 ```
 
 Install
