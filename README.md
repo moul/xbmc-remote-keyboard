@@ -1,6 +1,8 @@
 xbmc-remote-keyboard
 ====================
 
+By [Manfred Touron](https://github.com/moul)
+
 <img width="600px" src="https://raw.github.com/moul/xbmc-remote-keyboard/screenshots/images/verbose.png" /> 
 
 Send local keyboard presses to a remote XBMC through JSON RPC api
@@ -77,3 +79,8 @@ $ xbmc-remote-keyboard -d 127.0.0.1
 ```
 
 <img width="600px" src="https://raw.github.com/moul/xbmc-remote-keyboard/screenshots/images/debug.png" />
+
+License
+-------
+
+MIT
