@@ -27,6 +27,10 @@ class Keyboard extends Base
     'f':                'fullscreen'
 
   onInput: (human, c, i) =>
+    @log "human:", human, 'c:', c, 'i:', i
+    if i is 9
+      @toggleMode()
+    
     fn = @["onInput_#{@mode}"]
     if fn?
       fn human, c, i
@@ -60,6 +64,10 @@ class Keyboard extends Base
     @emit 'unknownInput', human, c, i
 
   on_q:     => @emit 'quit'
+
+  toggleMode: =>
+    @mode = if @mode is 'action' then 'text' else 'action'
+    @log "mode is", @mode
 
 module.exports =
   Keyboard: Keyboard
