@@ -19,7 +19,7 @@ class Keyboard extends Base
     127:                'Back'         #backspace
     'm':                'Showosd'
     'o':                'Showcodec'
-    'c':                'Contextmenu'
+    'c':                'ContextMenu'
     'i':                'Info'
 
   apiExecuteActionMap:
