@@ -12,11 +12,11 @@ system = (command, args) ->
 
 build = (fn = null) ->
   call 'coffee',     ['-c', '-o', 'lib', 'src']
-  call 'coffee',     ['-c', '-o', 'examples', 'examples']
+#  call 'coffee',     ['-c', '-o', 'examples', 'examples']
 
 watch = (fn = null) ->
   system 'coffee',     ['-w', '-c', '-o', 'lib', 'src']
-  system 'coffee',     ['-w', '-c', '-o', 'examples', 'examples']
+#  system 'coffee',     ['-w', '-c', '-o', 'examples', 'examples']
 
 task 'watch', 'continually build the JavaScript code', ->
   watch -> console.log "Done !"
