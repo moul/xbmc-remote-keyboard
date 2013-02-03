@@ -1,6 +1,6 @@
 {
   "name": "xbmc-remote-keyboard",
-  "version": "0.2.1",
+  "version": "0.2.3",
   "description": "Send local keyboard presses to a remote XBMC through JSON RPC api",
   "main": "index.js",
   "bin": {
@@ -25,5 +25,6 @@
     "terminal"
   ],
   "author": "Manfred Touron <m@42.am>",
+  "contributors": [{"name": "Nicolas Smith", "email": "stract74@netscape.net"}],
   "license": "MIT"
 }
