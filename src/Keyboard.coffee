@@ -3,6 +3,7 @@
 # http://wiki.xbmc.org/index.php?title=Keyboard
 class Keyboard extends Base
   start: =>
+    @debug 'start'
     @on   'input',        @onInput
     @on   'setInputMode', (mode) => @mode = mode
     @emit 'api',          'input.left'
@@ -27,10 +28,11 @@ class Keyboard extends Base
     'f':                'fullscreen'
 
   onInput: (human, c, i) =>
+    @debug 'onInput', human, c, i
     @log "human:", human, 'c:', c, 'i:', i
     if i is 9
       @toggleMode()
-    
+
     fn = @["onInput_#{@mode}"]
     if fn?
       fn human, c, i
@@ -38,6 +40,7 @@ class Keyboard extends Base
       @log "Unknown mode"
 
   onInput_text: (human, c, i) =>
+    @debug 'onInput_text', human, c, i
     if human is c
       if i is 127
         @textBuffer = @textBuffer[0...@textBuffer.length - 1]
@@ -52,6 +55,7 @@ class Keyboard extends Base
         @onInput_action human, c, i
 
   onInput_action: (human, c, i) =>
+    @debug 'onInput_action', human, c, i
     for key in [human, c, i]
       if @apiSendMap[key]?
         @log   "sending Input.#{@apiSendMap[key]} (#{key})"
@@ -63,9 +67,12 @@ class Keyboard extends Base
         return do @["on_#{key}"]
     @emit 'unknownInput', human, c, i
 
-  on_q:     => @emit 'quit'
+  on_q:     =>
+    @debug 'on_q'
+    @emit 'quit'
 
   toggleMode: =>
+    @debug 'toggleMode'
     @mode = if @mode is 'action' then 'text' else 'action'
     @log "mode is", @mode
 

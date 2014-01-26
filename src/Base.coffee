@@ -1,13 +1,7 @@
 {EventEmitter} = require 'events'
 
-class Base extends EventEmitter
+class module.exports.Base extends EventEmitter
   constructor: (@options = {}) ->
+    @log = @debug = require('debug') "xbmc-remote-keyboard:#{@constructor.name}"
+    @debug 'constructor'
     return @
-
-  log: (args...) =>
-    return false unless @options.verbose
-    name = @?.constructor?.toString?().match(/function\s*(\w+)/)?[1] || 'Base'
-    console.log "#{name}>", args...
-
-module.exports =
-  Base: Base

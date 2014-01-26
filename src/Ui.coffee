@@ -3,6 +3,7 @@ nc     = require 'ncurses'
 
 class Ui extends Base
   start: =>
+    @debug 'start'
     @win = new nc.Window()
     do @initLogProxy if @options.verbose or @options.debug
     nc.showCursor = false
@@ -12,15 +13,18 @@ class Ui extends Base
     do @draw
 
   initLogProxy: =>
+    @debug 'initLogProxy'
     @logBuffer = []
     @oldLog = console.log
     console.log = @log
 
   log: (args...) =>
+    @debug 'log', args...
     @logBuffer.push [args...]
     do @draw
 
   draw: =>
+    @debug 'draw'
     do @win.erase
     @win.insstr 0, 0, 'Press Q to quit'
     if @options.verbose or @options.debug
@@ -33,20 +37,28 @@ class Ui extends Base
     do @win.refresh
 
   close: =>
+    @debug 'close'
     do @win.erase
     do nc.cleanup
 
   human: (c, i) =>
+    @debug 'human', c, i
     for key, val of nc.keys
       return key if val is i
     return c
 
   onInputChar: (c, i) =>
+    @debug 'onInputChar', c, i
     @emit 'rawInput', c, i
     @emit 'input',    @human(c, i), c, i
 
-  onSIGWINCH: => do @draw
-  onSIGINT:   => @emit 'quit'
+  onSIGWINCH: =>
+    @debug 'onSIGWINCH'
+    do @draw
+
+  onSIGINT:   =>
+    @debug 'onSIGINT'
+    @emit 'quit'
 
 module.exports =
   Ui: Ui

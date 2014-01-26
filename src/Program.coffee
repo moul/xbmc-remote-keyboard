@@ -5,13 +5,17 @@ program    = require 'commander'
 {Keyboard} = require './Keyboard'
 url        = require 'url'
 
+
 class Program extends Base
   constructor: (@options = {}) ->
+    super
+    @debug "constructor"
     @options.name   ?= 'xbmc-remote-keyboard'
     do @initCommander
     return @
 
   initCommander: =>
+    @debug 'initCommander'
     default_config = process.env[if process.platform == 'win32' then 'USERPROFILE' else 'HOME'] + '/.xbmc-remote-keyboard.json'
     program.name = @options.name
     program
@@ -29,13 +33,14 @@ class Program extends Base
       .option('-a, --agent <agent>',       'user agent',         'Remote Keyboard')
 
   parseOptions: =>
+    @debug 'parseOptions'
     program.parse process.argv
     @options extends program
     try
       config = require @options.config
       @options extends config
     catch e
-      @log e
+      @debug 'No such config file:', @options.config
     if @options.args[0]?
       arg = @options.args[0]
       arg = "http://#{arg}" unless arg.indexOf('://') is 0
@@ -49,6 +54,7 @@ class Program extends Base
     do program.help unless @options.host?
 
   saveOptions: =>
+    @debug 'saveOptions'
     process.stdout.write "Writing config file (#{@options.config})... "
     config = {}
     config[key] = @options[key] for key in ['host', 'port']
@@ -56,6 +62,7 @@ class Program extends Base
     console.log "Done."
 
   initXbmc: (fn = null) =>
+    @debug 'initXbmc'
     {TCPConnection, XbmcApi} = require 'xbmc'
     @xbmcConnection = new TCPConnection
       host:       @options.host
@@ -69,56 +76,73 @@ class Program extends Base
       agent:      @options.agent || 'Remote Keyboard'
       silent:     @options.silent
 
-    @xbmcApi.on 'connection:open', ->
+    @xbmcApi.on 'connection:open', =>
+      @debug 'xbmcApi:connection:open'
       fn false if fn
 
-    @xbmcApi.on 'connection:error', (e) ->
+    @xbmcApi.on 'connection:error', (e) =>
+      @debug 'xbmcApi:connection:error', e
       fn true, e  if fn
 
   initKeyboard: (fn = null) =>
+    @debug 'initKeyboard'
     @keyboard = new Keyboard @options
     do @keyboard.start
     fn false if fn
 
   initUi: (fn = null) =>
+    @debug 'initUi'
     @ui = new Ui @options
     do @ui.start
     fn false if fn
 
   setupHandlers: =>
+    @debug 'setupHandlers'
+
     @ui.on 'input', (human, c, i) =>
+      @debug 'ui:input', human, c, i
       @keyboard.emit 'input', human, c, i
 
     @ui.on 'quit', =>
+      @debug 'ui:quit'
       do @close
 
     @keyboard.on 'quit', =>
+      @debug 'keyboard:quit'
       do @close
 
     @keyboard.on 'apiSendInput', (method, args = null) =>
+      @debug 'keyboard:apiSendInput', method, args
       @xbmcApi.input[method] args
 
     @keyboard.on 'api.Input.ExecuteAction', (method, args = null) =>
+      @debug 'keyboard:api.Input.ExecuteAction', method, args
       @xbmcApi.input.ExecuteAction method, args
 
     @keyboard.on 'unknownInput', (c, i) =>
+      @debug 'keyboard:unknownInput', c, i
       @log "Unknown input", c, i
 
     @keyboard.on 'sendText', (text) =>
+      @debug 'keyboard:sendText', text
       @xbmcApi.input.SendText text
 
     @xbmcApi.on 'api:Input.OnInputRequested', =>
+      @debug 'xbmcApi:api:Input.OnInputRequested'
       @keyboard.emit 'setInputMode', 'text'
 
     @xbmcApi.on 'api:Input.OnInputFinished', =>
+      @debug 'api:Input.OnInputFinished'
       @keyboard.emit 'setInputMode', 'action'
 
   close: (reason = '') =>
+    @debug 'close', reason
     console.log if reason then "Exiting (#{reason})" else "closing"
     do @ui.close if @ui
     process.exit 1
 
   run: =>
+    @debug 'run'
     do @parseOptions
     @initXbmc (err, reason = null) =>
       return @close reason if err
@@ -128,11 +152,14 @@ class Program extends Base
           return @close reason if err
           do @setupHandlers
 
-  @getVersion: -> JSON.parse(fs.readFileSync "#{__dirname}/../package.json", 'utf8').version
+  @getVersion: ->
+    JSON.parse(fs.readFileSync "#{__dirname}/../package.json", 'utf8').version
 
-  @create: (options = {}) -> new Program options
+  @create: (options = {}) ->
+    new Program options
 
-  @run: -> do (do Program.create).run
+  @run: ->
+    do (do Program.create).run
 
 module.exports =
   Program:    Program
