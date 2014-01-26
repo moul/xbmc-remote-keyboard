@@ -11,7 +11,7 @@
   },
   "dependencies": {
     "debug":     "*",
-    "xbmc":      "0.2",
+    "xbmc":      "0.3",
     "commander": "1.1.1",
     "ncurses":   "0.4.1"
   },
