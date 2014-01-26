@@ -1,6 +1,6 @@
 {
   "name": "xbmc-remote-keyboard",
-  "version": "0.2.4",
+  "version": "0.3.1",
   "description": "Send local keyboard presses to a remote XBMC through JSON RPC api",
   "main": "index.js",
   "bin": {
