@@ -7,5 +7,5 @@ RUN apt-get -qq -y install make gcc g++ && \
 ADD . /app/
 WORKDIR /app
 RUN npm install --production
-ENTRYPOINT node bin/xbmc-remote-keyboard
-
+ENTRYPOINT ["node", "bin/xbmc-remote-keyboard"]
+CMD ["-h"]
