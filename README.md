@@ -8,7 +8,7 @@ xbmc-remote-keyboard
 [![Views in the last 24 hours](https://sourcegraph.com/api/repos/github.com/moul/xbmc-remote-keyboard/counters/views-24h.png)](https://sourcegraph.com/github.com/moul/xbmc-remote-keyboard)
 [![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/moul/xbmc-remote-keyboard/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
 
-[![NPM Badge](https://nodei.co/npm/gitlab.png?downloads=true&stars=true)](https://npmjs.org/package/gitlab)
+[![NPM Badge](https://nodei.co/npm/xbmc-remote-keyboard.png?downloads=true&stars=true)](https://npmjs.org/package/xbmc-remote-keyboard)
 
 <img width="600px" src="https://raw.github.com/moul/xbmc-remote-keyboard/screenshots/images/verbose.png" /> 
 
